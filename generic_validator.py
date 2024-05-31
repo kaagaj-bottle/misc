@@ -15,7 +15,27 @@ data = {
 }
 
 
+def validate_type(value, type) -> bool:
+    isValid = False
+    if type == "int":
+        return isinstance(value, int) and not isinstance(value, bool)
+    elif type == "float":
+        return isinstance(value, float)
+    elif type == "bool":
+        return isinstance(value, bool)
+    elif type == "str":
+        return isinstance(value, str)
+    elif type == "list":
+        return isinstance(value, list)
+    else:
+        return False
+
+
 def int_validator(rule: Dict, value: int) -> bool:
+    if not validate_type(value, "int"):
+        print("Invalid Type")
+        return False
+
     isMinValid = value >= rule.get("min", -sys.maxsize)
     isMaxValid = value <= rule.get("max", sys.maxsize)
     if isMinValid and isMaxValid:
@@ -27,6 +47,10 @@ def int_validator(rule: Dict, value: int) -> bool:
 
 
 def float_validator(rule: Dict, value: float) -> bool:
+    if not validate_type(value, "float"):
+        print("Invalid Type")
+        return False
+
     isMinValid = value >= rule.get("min", -sys.maxsize)
     isMaxValid = value <= rule.get("max", sys.maxsize)
     if isMinValid and isMaxValid:
@@ -38,6 +62,10 @@ def float_validator(rule: Dict, value: float) -> bool:
 
 
 def bool_validator(rule: Dict, value: bool) -> bool:
+    if not validate_type(value, "bool"):
+        print("Invalid Type")
+        return False
+
     isBoolValid = True
     if "bool" in rule:
         isBoolValid = value == rule["value"]
@@ -49,6 +77,10 @@ def bool_validator(rule: Dict, value: bool) -> bool:
 
 
 def str_validator(rule: Dict, value: str) -> bool:
+    if not validate_type(value, "str"):
+        print("Invalid Type")
+        return False
+
     isMinValid = len(value) >= rule.get("min", 0)
     isMaxValid = True
     if "max" in rule:
@@ -63,6 +95,10 @@ def str_validator(rule: Dict, value: str) -> bool:
 
 
 def list_validator(rule: Dict, value: list) -> bool:
+    if not validate_type(value, "list"):
+        print("Invalid Type")
+        return False
+
     isLenValid = True
     isItemTypeValid = True
     if "length" in rule:
@@ -71,7 +107,7 @@ def list_validator(rule: Dict, value: list) -> bool:
         isLenValid = len(value) >= minLen and (len(value) <= maxLen or maxLen == -1)
     if "itemType" in rule and len(value) > 0:
         for item in value:
-            isItemTypeValid = isinstance(item, rule["itemType"])
+            isItemTypeValid = validate_type(item, rule["itemType"])
             if not isItemTypeValid:
                 break
 
@@ -84,20 +120,18 @@ def list_validator(rule: Dict, value: list) -> bool:
 
 
 def validator(rule: Dict, data: Any) -> bool:
-    if rule["type"] == int:
-        int_validator(rule, data)
-    if rule["type"] == float:
-        float_validator(rule, data)
-    elif rule["type"] == bool:
-        bool_validator(rule, data)
-    elif rule["type"] == str:
-        str_validator(rule, data)
-    elif rule["type"] == list:
-        list_validator(rule, data)
+    if rule["type"] == "int":
+        return int_validator(rule, data)
+    if rule["type"] == "float":
+        return float_validator(rule, data)
+    elif rule["type"] == "bool":
+        return bool_validator(rule, data)
+    elif rule["type"] == "str":
+        return str_validator(rule, data)
+    elif rule["type"] == "list":
+        return list_validator(rule, data)
     else:
         return True
-
-    return True
 
 
 def validate(rules: Dict, data: Dict):
