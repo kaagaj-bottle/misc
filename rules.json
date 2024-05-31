@@ -1,1 +1,36 @@
-{"age": {"type": "int", "min": 18, "max": 40}, "salary": {"type": "float", "min": 10000, "max": 50000}, "name": {"type": "str", "min": 10, "max": 25}, "location": {"type": "list", "length": {"min": 2, "max": 4}, "itemType": "str"}, "hobbies": {"type": "list", "length": {"min": 1}, "itemType": "int"}, "isWorkingYet": {"type": "bool", "value": true}}
+{
+  "age": {
+    "type": "int",
+    "min": 18,
+    "max": 40
+  },
+  "salary": {
+    "type": "float",
+    "min": 10000,
+    "max": 50000
+  },
+  "name": {
+    "type": "str",
+    "min": 10,
+    "max": 25
+  },
+  "location": {
+    "type": "list",
+    "length": {
+      "min": 2,
+      "max": 4
+    },
+    "itemType": "str"
+  },
+  "hobbies": {
+    "type": "list",
+    "length": {
+      "min": 1
+    },
+    "itemType": "int"
+  },
+  "isWorkingYet": {
+    "type": "bool",
+    "value": true
+  }
+}
