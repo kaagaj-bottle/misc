@@ -1,18 +1,6 @@
 from typing import Any, Dict
 import sys
-
-rules = {
-    "age": {"type": int, "min": 18, "max": 40},
-    "salary": {"type": float, "min": 10000, "max": 50000},
-    "name": {"type": str, "min": 10, "max": 25},
-}
-
-data = {
-    "age": 23,
-    "salary": 30000,
-    "name": "Zishan Siddique",
-    "location": ["Kathmandu", "Nepal"],
-}
+import json
 
 
 def validate_type(value, type) -> bool:
@@ -146,3 +134,47 @@ def validate(rules: Dict, data: Dict):
         print(f"{field} is validated")
         print(" ")
     return True
+
+
+rules = None
+data = None
+rules_json_path = None
+data_json_path = None
+
+try:
+    if sys.argv[1]:
+        rules_json_path = sys.argv[1]
+        with open(rules_json_path, "r") as reader:
+            rules = json.loads(reader.read())
+except:
+    print("rules josn file path missing")
+
+try:
+    if sys.argv[2]:
+        data_json_path = sys.argv[2]
+        with open(data_json_path, "r") as reader:
+            data = json.loads(reader.read())
+except:
+    print("data json file path missing")
+
+if rules and data:
+    print(validate(rules, data))
+
+# The following data has been converted to json format in rules.json and data.json files
+rules = {
+    "age": {"type": "int", "min": 18, "max": 40},
+    "salary": {"type": "float", "min": 10000, "max": 50000},
+    "name": {"type": "str", "min": 10, "max": 25},
+    "location": {"type": "list", "length": {"min": 2, "max": 4}, "itemType": "str"},
+    "hobbies": {"type": "list", "length": {"min": 1}, "itemType": "int"},
+    "isWorkingYet": {"type": "bool", "value": True},
+}
+
+data = {
+    "age": 23,
+    "salary": 30000.0,
+    "name": "Zishan Siddique",
+    "location": ["Kathmandu", "Nepal"],
+    "hobbies": [1, 2, 3],
+    "isWorkingYet": False,
+}
