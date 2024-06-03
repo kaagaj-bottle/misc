@@ -101,18 +101,19 @@ def list_validator(rule: Dict, value: list) -> bool:
 
 
 def validator(rule: Dict, data: Any) -> bool:
-    if rule["type"] == "int":
-        return int_validator(rule, data)
-    if rule["type"] == "float":
-        return float_validator(rule, data)
-    elif rule["type"] == "bool":
-        return bool_validator(rule, data)
-    elif rule["type"] == "str":
-        return str_validator(rule, data)
-    elif rule["type"] == "list":
-        return list_validator(rule, data)
-    else:
-        return True
+    validatorDict = {
+        "int": int_validator,
+        "float": float_validator,
+        "bool": bool_validator,
+        "str": str_validator,
+        "list": list_validator,
+    }
+    isTypeAvailable = rule["type"] in validatorDict
+
+    if isTypeAvailable:
+        validator_fn = validatorDict[rule["type"]]
+        return validator_fn(rule, data)
+    return True
 
 
 def validate(rules: Dict, data: Dict):
