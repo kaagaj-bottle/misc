@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Union
 import sys
 import json
 
@@ -12,34 +12,35 @@ def validate_type(value, type) -> bool:
         return False
 
 
+def range_validator(rule: Dict, value: Union[int, float]) -> bool:
+
+    isMinValid = True
+    isMaxValid = True
+
+    if "min" in rule:
+        isMinValid = value >= rule["min"]
+    if "max" in rule:
+        isMaxValid = value <= rule["max"]
+
+    if isMinValid and isMaxValid:
+        return True
+    print(f"isMinValid: {isMinValid}")
+    print(f"isMaxValid: {isMaxValid}")
+    return False
+
+
 def int_validator(rule: Dict, value: int) -> bool:
     if not validate_type(value, "int"):
         print("Invalid Type")
         return False
-
-    isMinValid = value >= rule.get("min", -sys.maxsize)
-    isMaxValid = value <= rule.get("max", sys.maxsize)
-    if isMinValid and isMaxValid:
-        return True
-    else:
-        print(f"isMinValid: {isMinValid}")
-        print(f"isMaxValid: {isMaxValid}")
-        return False
+    return range_validator(rule, value)
 
 
 def float_validator(rule: Dict, value: float) -> bool:
     if not validate_type(value, "float"):
         print("Invalid Type")
         return False
-
-    isMinValid = value >= rule.get("min", -sys.maxsize)
-    isMaxValid = value <= rule.get("max", sys.maxsize)
-    if isMinValid and isMaxValid:
-        return True
-    else:
-        print(f"isMinValid: {isMinValid}")
-        print(f"isMaxValid: {isMaxValid}")
-        return False
+    return range_validator(rule, value)
 
 
 def bool_validator(rule: Dict, value: bool) -> bool:
@@ -62,17 +63,7 @@ def str_validator(rule: Dict, value: str) -> bool:
         print("Invalid Type")
         return False
 
-    isMinValid = len(value) >= rule.get("min", 0)
-    isMaxValid = True
-    if "max" in rule:
-        isMaxValid = len(value) <= rule["max"]
-
-    if isMinValid and isMinValid:
-        return True
-    else:
-        print(f"isMinValid: {isMinValid}")
-        print(f"isMaxValid: {isMaxValid}")
-        return False
+    return range_validator(rule, len(value))
 
 
 def list_validator(rule: Dict, value: list) -> bool:
@@ -82,10 +73,10 @@ def list_validator(rule: Dict, value: list) -> bool:
 
     isLenValid = True
     isItemTypeValid = True
+
     if "length" in rule:
-        minLen = rule["length"].get("min", 0)
-        maxLen = rule["length"].get("max", -1)
-        isLenValid = len(value) >= minLen and (len(value) <= maxLen or maxLen == -1)
+        isLenValid = range_validator(rule["length"], len(value))
+
     if "itemType" in rule and len(value) > 0:
         for item in value:
             isItemTypeValid = validate_type(item, rule["itemType"])
@@ -134,6 +125,7 @@ rules = None
 data = None
 rules_json_path = None
 data_json_path = None
+print("hello")
 
 
 def read_json_file(path):
