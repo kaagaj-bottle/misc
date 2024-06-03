@@ -1,6 +1,9 @@
 from typing import Any, Dict, Union
-import sys
-import json
+
+
+def logger(logs: dict) -> None:
+    for key, value in logs.items():
+        print(f"{key}: {value}")
 
 
 def validate_type(value, type) -> bool:
@@ -15,7 +18,7 @@ def validate_type(value, type) -> bool:
     inferredType = typeDict.get(type, False)
     if inferredType and isinstance(value, inferredType):
         return True
-
+    print("Invalid Type")
     return False
 
 
@@ -39,28 +42,24 @@ def range_validator(rule: Dict, value: Union[int, float]) -> bool:
 
 def int_validator(rule: Dict, value: int) -> bool:
     if not validate_type(value, "int"):
-        print("Invalid Type")
         return False
     return range_validator(rule, value)
 
 
 def float_validator(rule: Dict, value: float) -> bool:
     if not validate_type(value, "float"):
-        print("Invalid Type")
         return False
     return range_validator(rule, value)
 
 
 def int_float_validator(rule: Dict, value: Union[int, float], type) -> bool:
     if not validate_type(value, type):
-        print("Invalid Type")
         return False
     return range_validator(rule, value)
 
 
 def bool_validator(rule: Dict, value: bool) -> bool:
     if not validate_type(value, "bool"):
-        print("Invalid Type")
         return False
 
     isBoolValid = True
@@ -75,7 +74,6 @@ def bool_validator(rule: Dict, value: bool) -> bool:
 
 def str_validator(rule: Dict, value: str) -> bool:
     if not validate_type(value, "str"):
-        print("Invalid Type")
         return False
 
     return range_validator(rule, len(value))
@@ -83,7 +81,6 @@ def str_validator(rule: Dict, value: str) -> bool:
 
 def list_validator(rule: Dict, value: list) -> bool:
     if not validate_type(value, "list"):
-        print("Invalid Type")
         return False
 
     isLenValid = True
@@ -108,7 +105,6 @@ def list_validator(rule: Dict, value: list) -> bool:
 
 def dict_validator(rule: Dict, value: Dict) -> bool:
     if not validate_type(rule, "dict"):
-        print("Invalid Type")
         return False
     return validate(rule["value"], value)
 
