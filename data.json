@@ -1,1 +1,30 @@
-{"age": 23, "salary": 30000.0, "name": "Zishan Siddique", "location": ["Kathmandu", "Nepal"], "hobbies": [1, 2, 3], "isWorkingYet": false, "dictValue": {"age": 23, "salary": 30000.0, "name": "Zishan Siddique", "location": ["Kathmandu", "Nepal"], "hobbies": [1, 2, 3], "isWorkingYet": false}}
+{
+  "age": 23,
+  "salary": 30000.0,
+  "name": "Zishan Siddique",
+  "location": [
+    "Kathmandu",
+    "Nepal"
+  ],
+  "hobbies": [
+    1,
+    2,
+    3
+  ],
+  "isWorkingYet": false,
+  "dictValue": {
+    "age": 23,
+    "salary": 30000.0,
+    "name": "Zishan Siddique",
+    "location": [
+      "Kathmandu",
+      "Nepal"
+    ],
+    "hobbies": [
+      1,
+      2,
+      3
+    ],
+    "isWorkingYet": false
+  }
+}
