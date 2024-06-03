@@ -51,6 +51,13 @@ def float_validator(rule: Dict, value: float) -> bool:
     return range_validator(rule, value)
 
 
+def int_float_validator(rule: Dict, value: Union[int, float], type) -> bool:
+    if not validate_type(value, type):
+        print("Invalid Type")
+        return False
+    return range_validator(rule, value)
+
+
 def bool_validator(rule: Dict, value: bool) -> bool:
     if not validate_type(value, "bool"):
         print("Invalid Type")
@@ -108,8 +115,8 @@ def dict_validator(rule: Dict, value: Dict) -> bool:
 
 def validator(rule: Dict, data: Any) -> bool:
     validatorDict = {
-        "int": int_validator,
-        "float": float_validator,
+        "int": lambda rule, data: int_float_validator(rule, data, "int"),
+        "float": lambda rule, data: int_float_validator(rule, data, "float"),
         "bool": bool_validator,
         "str": str_validator,
         "list": list_validator,
@@ -135,4 +142,3 @@ def validate(rules: Dict, data: Dict):
         print(f"{field} is validated")
         print(" ")
     return True
-
