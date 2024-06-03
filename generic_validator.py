@@ -135,19 +135,31 @@ data = None
 rules_json_path = None
 data_json_path = None
 
+
+def read_json_file(path):
+    data = None
+    try:
+        with open(path, "r") as reader:
+            data = json.loads(reader.read())
+    except FileNotFoundError:
+        print(f"{path} File Not Found")
+    except:
+        print(f"Error Reading the FIle {path}")
+
+    return data
+
+
 try:
     if sys.argv[1]:
         rules_json_path = sys.argv[1]
-        with open(rules_json_path, "r") as reader:
-            rules = json.loads(reader.read())
+        rules = read_json_file(rules_json_path)
 except:
-    print("rules josn file path missing")
+    print("rules json file path missing")
 
 try:
     if sys.argv[2]:
         data_json_path = sys.argv[2]
-        with open(data_json_path, "r") as reader:
-            data = json.loads(reader.read())
+        data = read_json_file(data_json_path)
 except:
     print("data json file path missing")
 
