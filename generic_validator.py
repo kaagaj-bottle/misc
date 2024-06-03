@@ -8,8 +8,8 @@ def validate_type(value, type) -> bool:
     inferredType = typeDict.get(type, False)
     if inferredType and isinstance(value, inferredType):
         return True
-    else:
-        return False
+
+    return False
 
 
 def range_validator(rule: Dict, value: Union[int, float]) -> bool:
@@ -24,6 +24,7 @@ def range_validator(rule: Dict, value: Union[int, float]) -> bool:
 
     if isMinValid and isMaxValid:
         return True
+   
     print(f"isMinValid: {isMinValid}")
     print(f"isMaxValid: {isMaxValid}")
     return False
@@ -53,9 +54,9 @@ def bool_validator(rule: Dict, value: bool) -> bool:
         isBoolValid = value == rule["value"]
     if isBoolValid:
         return True
-    else:
-        print(f"isBoolValid: {isBoolValid}")
-        return False
+    
+    print(f"isBoolValid: {isBoolValid}")
+    return False
 
 
 def str_validator(rule: Dict, value: str) -> bool:
@@ -85,10 +86,10 @@ def list_validator(rule: Dict, value: list) -> bool:
 
     if isLenValid and isItemTypeValid:
         return True
-    else:
-        print(f"isLenValid: {isLenValid}")
-        print(f"isItemTypeValid: {isItemTypeValid}")
-        return False
+    
+    print(f"isLenValid: {isLenValid}")
+    print(f"isItemTypeValid: {isItemTypeValid}")
+    return False
 
 
 def validator(rule: Dict, data: Any) -> bool:
