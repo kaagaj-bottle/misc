@@ -4,7 +4,14 @@ import json
 
 
 def validate_type(value, type) -> bool:
-    typeDict = {"int": int, "float": float, "bool": bool, "str": str, "list": list}
+    typeDict = {
+        "int": int,
+        "float": float,
+        "bool": bool,
+        "str": str,
+        "list": list,
+        "dict": dict,
+    }
     inferredType = typeDict.get(type, False)
     if inferredType and isinstance(value, inferredType):
         return True
@@ -24,7 +31,7 @@ def range_validator(rule: Dict, value: Union[int, float]) -> bool:
 
     if isMinValid and isMaxValid:
         return True
-   
+
     print(f"isMinValid: {isMinValid}")
     print(f"isMaxValid: {isMaxValid}")
     return False
@@ -54,7 +61,7 @@ def bool_validator(rule: Dict, value: bool) -> bool:
         isBoolValid = value == rule["value"]
     if isBoolValid:
         return True
-    
+
     print(f"isBoolValid: {isBoolValid}")
     return False
 
@@ -86,10 +93,17 @@ def list_validator(rule: Dict, value: list) -> bool:
 
     if isLenValid and isItemTypeValid:
         return True
-    
+
     print(f"isLenValid: {isLenValid}")
     print(f"isItemTypeValid: {isItemTypeValid}")
     return False
+
+
+def dict_validator(rule: Dict, value: Dict) -> bool:
+    if not validate_type(rule, "dict"):
+        print("Invalid Type")
+        return False
+    return validate(rule["value"], value)
 
 
 def validator(rule: Dict, data: Any) -> bool:
@@ -99,6 +113,7 @@ def validator(rule: Dict, data: Any) -> bool:
         "bool": bool_validator,
         "str": str_validator,
         "list": list_validator,
+        "dict": dict_validator,
     }
     isTypeAvailable = rule["type"] in validatorDict
 
