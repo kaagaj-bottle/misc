@@ -4,17 +4,10 @@ import json
 
 
 def validate_type(value, type) -> bool:
-    isValid = False
-    if type == "int":
-        return isinstance(value, int) and not isinstance(value, bool)
-    elif type == "float":
-        return isinstance(value, float)
-    elif type == "bool":
-        return isinstance(value, bool)
-    elif type == "str":
-        return isinstance(value, str)
-    elif type == "list":
-        return isinstance(value, list)
+    typeDict = {"int": int, "float": float, "bool": bool, "str": str, "list": list}
+    inferredType = typeDict.get(type, False)
+    if inferredType and isinstance(value, inferredType):
+        return True
     else:
         return False
 
