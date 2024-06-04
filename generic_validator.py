@@ -24,71 +24,74 @@ def validate_type(type, value) -> bool:
 
 def range_validator(rule: Dict, value: Union[int, float]) -> bool:
 
-    isMinValid = True
-    isMaxValid = True
+    checkConditions = {
+        "min": True,
+        "max": True,
+    }
 
     if "min" in rule:
-        isMinValid = value >= rule["min"]
+        checkConditions["min"] = value >= rule["min"]
     if "max" in rule:
-        isMaxValid = value <= rule["max"]
+        checkConditions["max"] = value <= rule["max"]
 
-    if isMinValid and isMaxValid:
+    if all(val == True for val in checkConditions.values()):
         return True
 
-    print(f"isMinValid: {isMinValid}")
-    print(f"isMaxValid: {isMaxValid}")
+    logger(checkConditions)
     return False
 
 
-def int_float_validator(rule: Dict, value: Union[int, float]) -> bool:
-    return range_validator(rule, value)
+# def int_float_validator(rule: Dict, value: Union[int, float]) -> bool:
+#     return range_validator(rule, value)
+int_float_validator = lambda rule, value: range_validator(rule, value)
 
 
 def bool_validator(rule: Dict, value: bool) -> bool:
 
-    isBoolValid = True
-    if "bool" in rule:
-        isBoolValid = value == rule["value"]
-    if isBoolValid:
+    checkConditions = {"value": True}
+    if "value" in rule:
+        checkConditions["value"] = value == rule["value"]
+
+    if all(val == True for val in checkConditions.values()):
         return True
 
-    print(f"isBoolValid: {isBoolValid}")
+    logger(checkConditions)
     return False
 
 
-def str_validator(rule: Dict, value: str) -> bool:
-    return range_validator(rule, len(value))
+# def str_validator(rule: Dict, value: str) -> bool:
+#     return range_validator(rule, len(value))
+str_validator = lambda rule, value: range_validator(rule, len(value))
 
 
 def list_validator(rule: Dict, value: list) -> bool:
-    isLenValid = True
-    isItemTypeValid = True
+    checkConditions = {"length": True, "itemType": True}
 
     if "length" in rule:
-        isLenValid = range_validator(rule["length"], len(value))
+        checkConditions["length"] = range_validator(rule["length"], len(value))
 
     if "itemType" in rule and len(value) > 0:
         for item in value:
-            isItemTypeValid = validate_type(rule["itemType"], item)
-            if not isItemTypeValid:
+            checkConditions["itemType"] = validate_type(rule["itemType"], item)
+            if not checkConditions["itemType"]:
                 break
 
-    if isLenValid and isItemTypeValid:
+    if all(val == True for val in checkConditions.values()):
         return True
 
-    print(f"isLenValid: {isLenValid}")
-    print(f"isItemTypeValid: {isItemTypeValid}")
+    logger(checkConditions)
     return False
 
 
-def dict_validator(rule: Dict, value: Dict) -> bool:
-    return validate(rule["value"], value)
+# def dict_validator(rule: Dict, value: Dict) -> bool:
+#     return validate(rule["value"], value)
+dict_validator = lambda rule, value: validate(rule["value"], value)
 
 
 def validator(rule: Dict, data: Any) -> bool:
     if not validate_type(rule["type"], data):
         return False
-    
+
     validatorDict = {
         "int": int_float_validator,
         "float": int_float_validator,
