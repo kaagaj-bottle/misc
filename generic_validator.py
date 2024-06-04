@@ -6,7 +6,7 @@ def logger(logs: dict) -> None:
         print(f"{key}: {value}")
 
 
-def validate_type(value, type) -> bool:
+def validate_type(type, value) -> bool:
     typeDict = {
         "int": int,
         "float": float,
@@ -40,27 +40,11 @@ def range_validator(rule: Dict, value: Union[int, float]) -> bool:
     return False
 
 
-def int_validator(rule: Dict, value: int) -> bool:
-    if not validate_type(value, "int"):
-        return False
-    return range_validator(rule, value)
-
-
-def float_validator(rule: Dict, value: float) -> bool:
-    if not validate_type(value, "float"):
-        return False
-    return range_validator(rule, value)
-
-
-def int_float_validator(rule: Dict, value: Union[int, float], type) -> bool:
-    if not validate_type(value, type):
-        return False
+def int_float_validator(rule: Dict, value: Union[int, float]) -> bool:
     return range_validator(rule, value)
 
 
 def bool_validator(rule: Dict, value: bool) -> bool:
-    if not validate_type(value, "bool"):
-        return False
 
     isBoolValid = True
     if "bool" in rule:
@@ -73,16 +57,10 @@ def bool_validator(rule: Dict, value: bool) -> bool:
 
 
 def str_validator(rule: Dict, value: str) -> bool:
-    if not validate_type(value, "str"):
-        return False
-
     return range_validator(rule, len(value))
 
 
 def list_validator(rule: Dict, value: list) -> bool:
-    if not validate_type(value, "list"):
-        return False
-
     isLenValid = True
     isItemTypeValid = True
 
@@ -91,7 +69,7 @@ def list_validator(rule: Dict, value: list) -> bool:
 
     if "itemType" in rule and len(value) > 0:
         for item in value:
-            isItemTypeValid = validate_type(item, rule["itemType"])
+            isItemTypeValid = validate_type(rule["itemType"], item)
             if not isItemTypeValid:
                 break
 
@@ -104,15 +82,16 @@ def list_validator(rule: Dict, value: list) -> bool:
 
 
 def dict_validator(rule: Dict, value: Dict) -> bool:
-    if not validate_type(rule, "dict"):
-        return False
     return validate(rule["value"], value)
 
 
 def validator(rule: Dict, data: Any) -> bool:
+    if not validate_type(rule["type"], data):
+        return False
+    
     validatorDict = {
-        "int": lambda rule, data: int_float_validator(rule, data, "int"),
-        "float": lambda rule, data: int_float_validator(rule, data, "float"),
+        "int": int_float_validator,
+        "float": int_float_validator,
         "bool": bool_validator,
         "str": str_validator,
         "list": list_validator,
